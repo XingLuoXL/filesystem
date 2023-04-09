@@ -42,11 +42,12 @@ std::vector<string> dirshow(const site& Dir){
 }
 
 std::vector<Tag*> fileshowtag(const File& file, const std::vector<File>& FILELIST){
-     for(auto it:FILELIST){
+    for(auto it:FILELIST){
         if((file.address==it.address)&&(file.name==it.name)){
             return file.F_taglist;
         }
     }
+    throw "Can not find this file";
 }
 
 bool fileindir(File file){
