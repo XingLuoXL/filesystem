@@ -1,4 +1,8 @@
 #include "api.h"
+#include <filesystem>
+namespace fs = std::filesystem;
+
+// typedef string site;
 
 // 用于储存，增删用函数实现以和 View 同步
 std::vector<File> FileList;
@@ -26,16 +30,33 @@ bool delete_from_tag(Tag* old_tag) {
     return false;
 }
 
-bool dirshow(const site& Dir) {
-
+std::vector<string> dirshow(const site& Dir){
+    std::vector<string> filename_dir;
+    fs::path str(Dir);
+    if (!fs::exists(str))
+        return filename_dir;
+    fs::directory_iterator list(str); 
+    
+    for (auto& it : list){
+        filename_dir.push_back(it.path().filename().string());
+    }
+    return filename_dir;
 }
 
-bool fileshowtag(const File& file, const std::vector<File>& FILELIST){
-
+std::vector<Tag*> fileshowtag(const File& file, const std::vector<File>& FILELIST){
+     for(auto it:FILELIST){
+        if((file.address==it.address)&&(file.name==it.name)){
+            return file.F_taglist;
+        }
+    }
 }
 
 bool fileindir(File file){
-
+    fs::path str(file.address + "//" +file.name );
+    if(!fs::exists(str)){
+        return 0;
+    }
+    return 1;
 }
 
 Tag* taginvec(string name, string explain){

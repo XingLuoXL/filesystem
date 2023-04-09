@@ -23,8 +23,8 @@ struct File {
     std::vector<Tag*>F_taglist;
 };
 
-bool dirshow(const site&);
-bool fileshowtag(const File&, const std::vector<File>&);
+std::vector<string> dirshow(const site&);
+std::vector<Tag*> fileshowtag(const File&, const std::vector<File>&);
 bool fileindir(File file);
 Tag* taginvec(string name, string explain);
 File* fileinvec(string name, string addr);
