@@ -2,8 +2,6 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
-// typedef string site;
-
 // 用于储存，增删用函数实现以和 View 同步
 std::vector<File> FileList;
 std::vector<Tag> TagList;
