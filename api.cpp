@@ -75,7 +75,9 @@ bool fileaddtag(File file, Tag tag){
 }
 
 bool filedeltag(File* file, Tag* tagpoint){
-
+    delete_from_tag(tagpoint);
+    
+    file->F_taglist.erase();
 }
 
 bool tagdel(string name, string explain){
