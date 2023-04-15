@@ -29,7 +29,7 @@ bool fileindir(File file);
 Tag* taginvec(string name, string explain);
 File* fileinvec(string name, string addr);
 File* fileinvec(string name);
-bool fileaddtag(File file, Tag tag);
+bool fileaddtag(File& file, Tag& tag);
 bool filedeltag(File* file, Tag* tagpoint);
 bool tagdel(string name, string explain);
 bool tagrename(string name, string explain);
