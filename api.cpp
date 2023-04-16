@@ -24,8 +24,15 @@ void add_to_tag(const Tag& new_tag) {
 }
 
 bool delete_from_tag(Tag* old_tag) {
-    // 较为繁琐
-    return false;
+     for(auto itr : old_tag->T_filelist) {
+        auto ref = find(itr->F_taglist.begin(),itr->F_taglist.end(),old_tag);
+        if(ref!=itr->F_taglist.end()+1) {itr->F_taglist.erase(ref);}
+        else {return false;}
+    }
+    TagView.erase(TagView.find(old_tag->name));
+    auto ref = find(TagList.begin(),TagList.end(),old_tag);
+    TagList.erase(ref);
+    return true;
 }
 
 std::vector<string> dirshow(const site& Dir){
@@ -106,19 +113,54 @@ bool fileaddtag(File& file, Tag& tag){
 }
 
 bool filedeltag(File* file, Tag* tagpoint){
-    delete_from_tag(tagpoint);
-    
-    file->F_taglist.erase();
+    //tag不存在则报错
+    if(tagpoint==nullptr)return false;
+    //tag存在则删除目标文件vector中的tag指针
+    auto ref = find(file->F_taglist.begin(),file->F_taglist.end(),tagpoint);
+    file->F_taglist.erase(ref);
+    //删除tag中的文件指针
+    auto itr = find(tagpoint->T_filelist.begin(),tagpoint->T_filelist.end(),file);
+    tagpoint->T_filelist.erase(itr);
+    //若该tag的vector中没有其他文件，删除之
+    if(tagpoint->T_filelist.empty()){
+        delete_from_tag(tagpoint);
+    }
+    return true;
 }
 
 bool tagdel(string name, string explain){
-
+    Tag* object_tag;
+    object_tag=taginvec(name, explain);
+    for(auto& it : object_tag->T_filelist){
+        filedeltag(it,object_tag);
+    }
+    return true;
 }
 
-bool tagrename(string name, string explain){
-
+bool tagrename(string old_name, string new_name, string explain){
+    Tag* object_tag;
+    object_tag=taginvec(old_name, explain);
+    if(object_tag->T_filelist.empty()){
+        throw "Can not find this tag";
+        return false;
+    }
+    else{
+    object_tag->name==new_name;
+    return true;
+    }
+    return false;
 }
 
 bool tagexplain(string name, string explain){
-
+    Tag* object_tag;
+    object_tag=taginvec(name,"0");
+    if(object_tag->T_filelist.empty()){
+        throw "Can not find this tag";
+        return false;
+    }
+    else{
+        object_tag->explain=explain;
+        return true;
+    }
+    return false;
 }

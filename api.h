@@ -13,7 +13,7 @@ typedef string site;
 
 struct Tag {
     std::string name;
-    std::string explain;
+    std::string explain = "0";
     std::vector<File*>T_filelist;
 };
 
@@ -32,6 +32,6 @@ File* fileinvec(string name);
 bool fileaddtag(File& file, Tag& tag);
 bool filedeltag(File* file, Tag* tagpoint);
 bool tagdel(string name, string explain);
-bool tagrename(string name, string explain);
+bool tagrename(string old_name, string new_name, string explain);
 bool tagexplain(string name, string explain);
 
