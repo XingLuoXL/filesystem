@@ -24,13 +24,13 @@ void add_to_tag(const Tag& new_tag) {
 }
 
 bool delete_from_tag(Tag* old_tag) {
-     for(auto itr : old_tag->T_filelist) {
+    for(auto itr : old_tag->T_filelist) {
         auto ref = find(itr->F_taglist.begin(),itr->F_taglist.end(),old_tag);
         if(ref!=itr->F_taglist.end()+1) {itr->F_taglist.erase(ref);}
         else {return false;}
     }
     TagView.erase(TagView.find(old_tag->name));
-    auto ref = find(TagList.begin(),TagList.end(),old_tag);
+    auto ref = find(TagList.begin(),TagList.end(),*old_tag);
     TagList.erase(ref);
     return true;
 }
@@ -57,13 +57,7 @@ std::vector<Tag*> fileshowtag(const File& file, const std::vector<File>& FILELIS
     throw "Can not find this file";
 }
 
-bool fileindir(File file){
-    fs::path str(file.address + "//" +file.name );
-    if(!fs::exists(str)){
-        return 0;
-    }
-    return 1;
-}
+
 
 Tag* taginvec(string name, string explain){
     for(auto& it : TagList) {
