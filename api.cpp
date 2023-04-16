@@ -66,9 +66,15 @@ bool fileindir(File file){
 }
 
 Tag* taginvec(string name, string explain){
-    for(auto& it : TagList) {
-        if( it.name == name && it.explain == explain ) { 
-            return &it;
+    std::unordered_map<std::string, std::vector<Tag*>>::iterator find_pos = TagView.find(name);
+    if(find_pos != TagView.end())
+    {
+        for(auto& it : TagView[name])
+        {
+            if(it->explain == explain)
+            {
+                return it;    
+            }
         }
     }
     Tag* it = new Tag;
@@ -78,7 +84,7 @@ Tag* taginvec(string name, string explain){
 }
 
 File* fileinvec(string name, string addr){
-    for(auto& it : FileList) {
+    for(auto& it : FileView) {
         if( it.name == name && it.address == addr ) {
             return &it;
         }
