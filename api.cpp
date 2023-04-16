@@ -65,14 +65,6 @@ bool fileindir(File file){
     return 1;
 }
 
-bool fileindir(File file){
-    fs::path str(file.address + "//" +file.name );
-    if(!fs::exists(str)){
-        return 0;
-    }
-    return 1;
-}
-
 Tag* taginvec(string name, string explain){
     for(auto& it : TagList) {
         if( it.name == name && it.explain == explain ) { 
