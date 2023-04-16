@@ -49,7 +49,7 @@ std::vector<string> dirshow(const site& Dir){
 }
 
 std::vector<Tag*> fileshowtag(const File& file, const std::vector<File>& FILELIST){
-    for(auto it:FILELIST){
+    for(auto &it:FILELIST){
         if((file.address==it.address)&&(file.name==it.name)){
             return file.F_taglist;
         }
@@ -141,7 +141,7 @@ bool tagrename(string old_name, string new_name, string explain){
         return false;
     }
     else{
-    object_tag->name==new_name;
+    object_tag->name=new_name;
     return true;
     }
     return false;
