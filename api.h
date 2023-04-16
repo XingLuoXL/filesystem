@@ -15,6 +15,9 @@ struct Tag {
     std::string name;
     std::string explain = "0";
     std::vector<File*>T_filelist;
+    bool operator==(const Tag &T){
+        return (this->name == T.name)&&(this->explain == T.explain)&&(this ->T_filelist == T.T_filelist);
+    }
 };
 
 struct File {
