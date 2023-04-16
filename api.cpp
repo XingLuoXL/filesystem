@@ -24,7 +24,7 @@ void add_to_tag(const Tag& new_tag) {
 }
 
 bool delete_from_tag(Tag* old_tag) {
-    for(auto itr : old_tag->T_filelist) {
+     for(auto itr : old_tag->T_filelist) {
         auto ref = find(itr->F_taglist.begin(),itr->F_taglist.end(),old_tag);
         if(ref!=itr->F_taglist.end()+1) {itr->F_taglist.erase(ref);}
         else {return false;}
@@ -57,7 +57,13 @@ std::vector<Tag*> fileshowtag(const File& file, const std::vector<File>& FILELIS
     throw "Can not find this file";
 }
 
-
+bool fileindir(File file){
+    fs::path str(file.address + "//" +file.name );
+    if(!fs::exists(str)){
+        return 0;
+    }
+    return 1;
+}
 
 Tag* taginvec(string name, string explain){
     for(auto& it : TagList) {
@@ -117,9 +123,7 @@ bool filedeltag(File* file, Tag* tagpoint){
 bool tagdel(string name, string explain){
     Tag* object_tag;
     object_tag=taginvec(name, explain);
-    for(auto& it : object_tag->T_filelist){
-        filedeltag(it,object_tag);
-    }
+    delete_from_tag(object_tag);
     return true;
 }
 
