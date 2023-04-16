@@ -96,7 +96,7 @@ File* fileinvec(string name, string addr){
 }
 
 File* fileinvec(string name){
-    for(auto& it : FileList) {
+    for(auto& it : FileView) {
         if(it.name == name) {
             return &it;
         }
