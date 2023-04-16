@@ -58,20 +58,51 @@ bool fileindir(File file){
     return 1;
 }
 
-Tag* taginvec(string name, string explain){
+bool fileindir(File file){
+    fs::path str(file.address + "//" +file.name );
+    if(!fs::exists(str)){
+        return 0;
+    }
+    return 1;
+}
 
+Tag* taginvec(string name, string explain){
+    for(auto& it : TagList) {
+        if( it.name == name && it.explain == explain ) { 
+            return &it;
+        }
+    }
+    Tag* it = new Tag;
+    it->name = name, it->explain = explain;
+    add_to_tag(*it);
+    return it;
 }
 
 File* fileinvec(string name, string addr){
-
+    for(auto& it : FileList) {
+        if( it.name == name && it.address == addr ) {
+            return &it;
+        }
+    }
+    File* it = new File;
+    it->name = name, it->address = addr;
+    FileList.push_back(*it);
+    return it;
 }
 
 File* fileinvec(string name){
-
+    for(auto& it : FileList) {
+        if(it.name == name) {
+            return &it;
+        }
+    }
+    return nullptr;
 }
 
-bool fileaddtag(File file, Tag tag){
-    
+bool fileaddtag(File& file, Tag& tag){
+    file.F_taglist.push_back(&tag);
+    tag.T_filelist.push_back(&file);
+    return true;
 }
 
 bool filedeltag(File* file, Tag* tagpoint){
