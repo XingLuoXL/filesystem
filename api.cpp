@@ -11,7 +11,7 @@ std::vector<File>& FileView = FileList;
 std::unordered_map<std::string, std::vector<Tag*>> TagView;
 
 void add_to_tag(const Tag& new_tag) {
-    TagList.push_back(new_tag);
+
     // 多线程需加锁，因为这个 TagList 可能已经被修改了
     Tag* last_data = TagList.data() + (TagList.size() - 1);
     auto res = TagView.find(new_tag.name);
@@ -24,7 +24,7 @@ void add_to_tag(const Tag& new_tag) {
 }
 
 bool delete_from_tag(Tag* old_tag) {
-     for(auto itr : old_tag->T_filelist) {
+    for(auto itr : old_tag->T_filelist) {
         auto ref = find(itr->F_taglist.begin(),itr->F_taglist.end(),old_tag);
         if(ref!=itr->F_taglist.end()+1) {itr->F_taglist.erase(ref);}
         else {return false;}
@@ -40,18 +40,20 @@ std::vector<string> dirshow(const site& Dir){
     fs::path str(Dir);
     if (!fs::exists(str))
         return filename_dir;
-    fs::directory_iterator list(str); 
-    
+    fs::directory_iterator list(str);
+
     for (auto& it : list){
         filename_dir.push_back(it.path().filename().string());
     }
     return filename_dir;
 }
 
-std::vector<Tag*> fileshowtag(const File& file, const std::vector<File>& FILELIST){
-    for(auto &it:FILELIST){
+std::vector<Tag*> fileshowtag(const File& file){
+    for(auto &it:FileView){
+
         if((file.address==it.address)&&(file.name==it.name)){
-            return file.F_taglist;
+            std::cout<<it.F_taglist.size()<<std::endl;
+            return it.F_taglist;
         }
     }
     throw "Can not find this file";
@@ -73,14 +75,21 @@ Tag* taginvec(string name, string explain){
         {
             if(it->explain == explain)
             {
-                return it;    
+                return it;
             }
         }
     }
-    Tag* it = new Tag;
-    it->name = name, it->explain = explain;
-    add_to_tag(*it);
-    return it;
+    TagList.emplace_back();
+    auto &e = TagList.back();
+    e.name = name;
+    e.explain = explain;
+    add_to_tag(e);
+    return &e;
+
+//    Tag* it = new Tag;
+//    it->name = name, it->explain = explain;
+//    add_to_tag(*it);
+//    return it;
 }
 
 File* fileinvec(string name, string addr){
@@ -89,10 +98,12 @@ File* fileinvec(string name, string addr){
             return &it;
         }
     }
-    File* it = new File;
-    it->name = name, it->address = addr;
-    FileList.push_back(*it);
-    return it;
+
+    FileList.emplace_back();
+    auto &e = FileList.back();
+    e.name = name;
+    e.address = addr;
+    return &e;
 }
 
 File* fileinvec(string name){
@@ -104,9 +115,10 @@ File* fileinvec(string name){
     return nullptr;
 }
 
-bool fileaddtag(File& file, Tag& tag){
-    file.F_taglist.push_back(&tag);
-    tag.T_filelist.push_back(&file);
+bool fileaddtag(File* file, Tag* tag){
+    file->F_taglist.push_back(tag);
+
+    tag->T_filelist.push_back(file);
     return true;
 }
 
@@ -141,8 +153,8 @@ bool tagrename(string old_name, string new_name, string explain){
         return false;
     }
     else{
-    object_tag->name=new_name;
-    return true;
+        object_tag->name=new_name;
+        return true;
     }
     return false;
 }
@@ -159,4 +171,15 @@ bool tagexplain(string name, string explain){
         return true;
     }
     return false;
+}
+
+
+std::vector<string> showalltag()
+{
+    std::vector<string> taglist;
+//    std::cout<<TagView.size()<<std::endl;
+    for(auto &i:TagView){
+        taglist.push_back(i.first);
+    }
+    return taglist;
 }
